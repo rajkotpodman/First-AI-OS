@@ -1,0 +1,26 @@
+{
+  "name": "github_status_plugin",
+  "version": "1.0.0",
+  "description": "Inspects GitHub service health, checks local and remote repository branches, and monitors PRs/commits",
+  "author": "AI OS DevOps Team",
+  "entrypoint": "main.py",
+  "enabled": true,
+  "triggers": [
+    "check github",
+    "github status",
+    "repo status",
+    "check repo",
+    "github issues",
+    "github prs"
+  ],
+  "cli_command": "github",
+  "permissions": [
+    "network",
+    "filesystem_read",
+    "execute_command"
+  ],
+  "config": {
+    "status_endpoint": "https://www.githubstatus.com/api/v2/status.json",
+    "timeout_seconds": 5
+  }
+}

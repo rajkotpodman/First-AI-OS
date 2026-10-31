@@ -1,0 +1,3 @@
+#!/bin/sh
+# ai-memory - CLI Helper Script for AI OS Personal Memory Engine
+exec python3 "$(dirname "$0")/src/personal_memory.py" "$@"

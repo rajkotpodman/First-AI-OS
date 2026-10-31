@@ -1,0 +1,69 @@
+#!/sbin/openrc-run
+# /etc/init.d/ai-overlayfs: Persistent OverlayFS mount service for AI OS
+# Sets up persistent overlays for /home, /workspace, and /var/lib/docker
+
+name="AI OS OverlayFS Persistence"
+description="Mounts persistent OverlayFS layers for user workspace, home, and Docker"
+
+depend() {
+    before localmount docker
+    after dev-mount
+}
+
+STORAGE_LABEL="AIOS_DATA"
+PERSIST_BASE="/mnt/aios-storage"
+
+setup_overlay() {
+    local target="$1"
+    local rel_name=$(echo "$target" | sed 's|^/||; s|/|_|g')
+    local lower_dir="/ro_lower/${rel_name}"
+    local upper_dir="${PERSIST_BASE}/${rel_name}_upper"
+    local work_dir="${PERSIST_BASE}/${rel_name}_work"
+
+    mkdir -p "${lower_dir}" "${upper_dir}" "${work_dir}" "${target}"
+
+    # If target already has contents, bind-copy or preserve
+    if [ ! -d "${lower_dir}/.initialized" ]; then
+        cp -a "${target}/." "${lower_dir}/" 2>/dev/null || true
+        touch "${lower_dir}/.initialized"
+    fi
+
+    # Mount OverlayFS
+    einfo "Mounting OverlayFS on ${target} -> [upper: ${upper_dir}]"
+    mount -t overlay "overlay_${rel_name}" \
+        -o "lowerdir=${lower_dir},upperdir=${upper_dir},workdir=${work_dir}" \
+        "${target}"
+}
+
+start() {
+    ebegin "Initializing AI OS OverlayFS & Persistent Storage"
+
+    mkdir -p "${PERSIST_BASE}"
+
+    # 1. Look for persistent storage device by filesystem label
+    DATA_DEV=$(blkid -L "${STORAGE_LABEL}" 2>/dev/null || true)
+
+    if [ -n "${DATA_DEV}" ] && [ -b "${DATA_DEV}" ]; then
+        einfo "Found persistent block device: ${DATA_DEV} [Label: ${STORAGE_LABEL}]"
+        mount -o noatime,discard "${DATA_DEV}" "${PERSIST_BASE}"
+    else
+        ewarn "No disk labeled '${STORAGE_LABEL}' found. Initializing RAM tmpfs backing store."
+        mount -t tmpfs -o size=2G tmpfs "${PERSIST_BASE}"
+    fi
+
+    # 2. Configure Overlays for critical write paths
+    setup_overlay "/home"
+    setup_overlay "/workspace"
+    setup_overlay "/var/lib/docker"
+
+    eend $?
+}
+
+stop() {
+    ebegin "Unmounting AI OS OverlayFS layers"
+    umount -l /var/lib/docker 2>/dev/null || true
+    umount -l /workspace 2>/dev/null || true
+    umount -l /home 2>/dev/null || true
+    umount -l "${PERSIST_BASE}" 2>/dev/null || true
+    eend $?
+}

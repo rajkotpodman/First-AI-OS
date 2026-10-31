@@ -1,0 +1,81 @@
+# ==============================================================================
+# Sway Configuration for AI OS (Minimal Wayland Desktop)
+# Location: ~/.config/sway/config or /etc/sway/config
+# ==============================================================================
+
+# Modifier Key (Mod4 = Super / Windows key)
+set $mod Mod4
+
+# Default Applications
+set $term foot
+set $menu dmenu_path | dmenu | xargs swaymsg exec --
+
+# Typography
+font pango:DejaVu Sans Mono 10
+
+# Output Wallpaper / Background (Dark Slate Aesthetics)
+output * bg #0f141c solid_color
+
+# Idle & Screen Lock configuration
+# exec swayidle -w timeout 600 'swaylock -f -c 000000'
+
+# Keybindings: Core Applications
+bindsym $mod+Return exec $term
+bindsym $mod+d exec $menu
+bindsym $mod+Shift+q kill
+
+# Keybindings: Window Focus Navigation
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Keybindings: Moving Windows
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Keybindings: Layout Switching
+bindsym $mod+b splith
+bindsym $mod+v splitv
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+f fullscreen
+bindsym $mod+Shift+space floating toggle
+
+# Keybindings: Workspaces
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+
+# Keybinding: Exit Sway & Return to TTY Mode
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit AI OS Desktop and return to TTY CLI?' -B 'Yes, exit' 'swaymsg exit'
+bindsym $mod+Shift+x exec swaymsg exit
+
+# Window Styling & Borders
+default_border pixel 2
+default_floating_border pixel 2
+gaps inner 8
+gaps outer 4
+
+# Tokyo Night / Dark Slate Color Palette
+# class                 border  backgr. text    indicator child_border
+client.focused          #38bdf8 #1e293b #f8fafc #38bdf8   #38bdf8
+client.focused_inactive #334155 #0f172a #94a3b8 #334155   #334155
+client.unfocused        #1e293b #0f172a #64748b #1e293b   #1e293b
+client.urgent           #ef4444 #7f1d1d #ffffff #ef4444   #ef4444
+
+# Status Bar Configuration: Launch Waybar
+bar {
+    swaybar_command waybar
+}

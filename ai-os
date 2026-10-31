@@ -1,0 +1,3 @@
+#!/bin/sh
+# /usr/bin/ai-os - Master AI Operating System Entry Point
+exec python3 "$(dirname "$0")/src/main_orchestrator.py" "$@"

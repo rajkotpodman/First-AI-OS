@@ -1,0 +1,37 @@
+#!/sbin/openrc-run
+# /etc/init.d/ai-cron: OpenRC daemon service for AI OS Autonomous Task Scheduler
+
+name="AI OS Autonomous Cron Daemon"
+description="Runs background AI tasks, system maintenance, project health monitoring, and data scraping"
+
+command="/usr/bin/python3"
+command_args="/usr/local/ai_os/src/ai_cron_daemon.py"
+command_background="yes"
+pidfile="/var/run/ai_cron.pid"
+output_log="/var/log/ai_cron.log"
+error_log="/var/log/ai_cron.err"
+
+depend() {
+    need localmount
+    after ai-agent ai-overlayfs
+}
+
+start_pre() {
+    mkdir -p /var/log /var/run /etc/ai_os
+    checkpath -d -m 0755 -o root:root /var/run
+    if [ ! -f /etc/ai_os/tasks.json ]; then
+        if [ -f /usr/local/ai_os/configs/tasks.json ]; then
+            cp /usr/local/ai_os/configs/tasks.json /etc/ai_os/tasks.json
+        fi
+    fi
+}
+
+start_post() {
+    einfo "AI Cron Daemon started. Task configuration active at /etc/ai_os/tasks.json"
+}
+
+stop() {
+    ebegin "Stopping AI Cron Daemon"
+    start-stop-daemon --stop --pidfile "${pidfile}"
+    eend $?
+}

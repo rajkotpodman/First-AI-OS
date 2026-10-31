@@ -1,0 +1,174 @@
+{
+  "policy_name": "AI_OS_Fine_Grained_Security_Policy",
+  "version": "1.0.0",
+  "daemon": {
+    "socket_path": "/run/ai_security.sock",
+    "fallback_tcp_host": "127.0.0.1",
+    "fallback_tcp_port": 9876,
+    "audit_log_path": "/var/log/ai_security_audit.log",
+    "fallback_audit_log_path": "./logs/ai_security_audit.log",
+    "default_workspace": "/workspace"
+  },
+  "boundaries": {
+    "allowed_write_paths": [
+      "/workspace",
+      "/home",
+      "/tmp/workspace",
+      "./workspace",
+      "./"
+    ],
+    "critical_host_directories": [
+      "/boot",
+      "/etc/shadow",
+      "/etc/passwd",
+      "/etc/sudoers",
+      "/etc/security",
+      "/etc",
+      "/lib",
+      "/lib64",
+      "/usr/lib",
+      "/usr/lib64",
+      "/bin",
+      "/sbin",
+      "/usr/bin",
+      "/usr/sbin",
+      "/sys",
+      "/proc",
+      "/dev",
+      "/root",
+      "/vmlinuz",
+      "/initrd.img"
+    ]
+  },
+  "risk_rules": {
+    "low_commands": [
+      "ls", "cat", "grep", "egrep", "fgrep", "status", "ps", "top", "htop",
+      "df", "du", "pwd", "whoami", "uname", "id", "uptime", "free", "head",
+      "tail", "wc", "sort", "uniq", "date", "which", "whereis", "find",
+      "stat", "file", "diff", "cmp", "readlink", "echo", "printf", "true",
+      "false", "test", "basename", "dirname", "env", "printenv", "strings"
+    ],
+    "medium_commands": [
+      "mkdir", "touch", "cp", "tee", "sed", "awk", "git", "python",
+      "python3", "node", "npm", "cargo", "go", "tar", "gzip", "gunzip",
+      "zip", "unzip", "patch", "wget", "curl", "make", "gcc", "g++",
+      "clang", "pip", "pip3"
+    ],
+    "medium_package_install_patterns": [
+      "^apk\\s+add\\b",
+      "^apt(-get)?\\s+install\\b",
+      "^pip[0-9]*\\s+install\\b",
+      "^npm\\s+install\\b",
+      "^cargo\\s+install\\b",
+      "^go\\s+install\\b"
+    ],
+    "high_commands": [
+      "sudo", "su", "doas", "rm", "unlink", "shred", "kill", "pkill",
+      "killall", "systemctl", "service", "init", "shutdown", "poweroff",
+      "reboot", "iptables", "nftables", "ip", "ifconfig", "route", "fdisk",
+      "parted", "gdisk", "mkfs", "dd", "mount", "umount", "chown", "chmod",
+      "useradd", "userdel", "usermod", "groupadd", "groupdel", "passwd",
+      "sysctl", "modprobe", "insmod", "rmmod", "chroot"
+    ],
+    "high_package_removal_patterns": [
+      "^apk\\s+del\\b",
+      "^apt(-get)?\\s+(remove|purge|autoremove)\\b",
+      "^dpkg\\s+-(r|P|--remove|--purge)\\b",
+      "^pacman\\s+-R",
+      "^dnf\\s+remove\\b",
+      "^yum\\s+remove\\b"
+    ],
+    "high_network_patterns": [
+      ".*iptables\\s+.*",
+      ".*nft\\s+.*",
+      ".*ip\\s+(route|rule|addr)\\s+(add|del|replace).*",
+      ".*ifconfig\\s+.*(up|down|netmask).*",
+      ".*>\\s*/etc/(resolv\\.conf|hosts|network/interfaces|nsswitch\\.conf).*"
+    ],
+    "blocked_patterns": [
+      "^rm\\s+(-[a-zA-Z]*r[a-zA-Z]*f*|-f[a-zA-Z]*r[a-zA-Z]*)\\s+(/|/\\*)$",
+      ".*rm\\s+(-[a-zA-Z]*r[a-zA-Z]*f*|-f[a-zA-Z]*r[a-zA-Z]*)\\s+--no-preserve-root\\s+.*",
+      ".*mkfs(\\.[a-z0-9]+)?\\s+/dev/(sd[a-z]|nvme[0-9]n[0-9]|hd[a-z]|vd[a-z]|mmcblk[0-9]).*",
+      ".*dd\\s+.*of=/dev/(sd[a-z]|nvme[0-9]n[0-9]|hd[a-z]|vd[a-z]|null|zero|mem|kmem).*",
+      ".*>\\s*/dev/(sd[a-z]|nvme[0-9]n[0-9]|hd[a-z]|vd[a-z]|mem|kmem).*",
+      ".*:\\(\\)\\s*\\{\\s*:\\|:&\\s*\\};:.*",
+      ".*kill\\s+-9\\s+1\\b.*",
+      ".*chmod\\s+(-R\\s+)?777\\s+/$"
+    ]
+  },
+  "syscall_guardrails": {
+    "blocked_syscalls": [
+      "reboot",
+      "kexec_load",
+      "kexec_file_load",
+      "init_module",
+      "finit_module",
+      "delete_module",
+      "bpf",
+      "swapon",
+      "swapoff",
+      "sys_chroot",
+      "pivot_root",
+      "ptrace",
+      "iopl",
+      "ioperm",
+      "acct",
+      "lookup_dcookie",
+      "perf_event_open"
+    ],
+    "high_risk_syscalls": [
+      "mount",
+      "umount2",
+      "setuid",
+      "setgid",
+      "capset",
+      "fchown",
+      "fchownat",
+      "fchmod",
+      "fchmodat",
+      "kill",
+      "tgkill",
+      "tkill",
+      "unlink",
+      "unlinkat",
+      "rename",
+      "renameat",
+      "renameat2"
+    ],
+    "medium_syscalls": [
+      "mkdir",
+      "mkdirat",
+      "creat",
+      "openat",
+      "open",
+      "write",
+      "writev",
+      "pwrite64",
+      "fallocate",
+      "ftruncate"
+    ],
+    "low_syscalls": [
+      "read",
+      "readv",
+      "pread64",
+      "stat",
+      "fstat",
+      "newfstatat",
+      "lstat",
+      "getdents",
+      "getdents64",
+      "access",
+      "faccessat",
+      "getcwd",
+      "getuid",
+      "geteuid",
+      "getgid",
+      "getegid"
+    ]
+  },
+  "tamper_evidence": {
+    "hash_algorithm": "sha256",
+    "genesis_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "enforce_signature": false
+  }
+}

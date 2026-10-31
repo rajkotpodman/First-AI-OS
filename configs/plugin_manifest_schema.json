@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI OS Plugin Manifest Schema",
+  "description": "Schema definition and security specification for AI OS plugins and extensions",
+  "type": "object",
+  "required": ["name", "version", "entrypoint", "triggers", "permissions"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_\\-]+$",
+      "minLength": 2,
+      "maxLength": 64,
+      "description": "Unique identifier for the plugin"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[a-zA-Z0-9_\\-\\.]+)?$",
+      "description": "Semantic versioning string (e.g. 1.0.0)"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 256,
+      "description": "Summary of what the plugin does"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author or maintainer name/email"
+    },
+    "entrypoint": {
+      "type": "string",
+      "default": "main.py",
+      "description": "Relative path to entrypoint Python script exposing execute(context)"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the plugin is active"
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 2
+      },
+      "minItems": 1,
+      "description": "Natural language phrases or keywords that dispatch this plugin"
+    },
+    "cli_command": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_\\-]+$",
+      "description": "Optional CLI subcommand for direct invocation"
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "network",
+          "filesystem_read",
+          "filesystem_write",
+          "execute_command",
+          "memory_access",
+          "docs_access"
+        ]
+      },
+      "uniqueItems": true,
+      "description": "Sandbox permissions requested by the plugin"
+    },
+    "config": {
+      "type": "object",
+      "description": "Custom configuration values passed to the plugin"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,68 @@
+name: Bug Report
+description: File an issue or unexpected error in First AI OS
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue! Please provide as much detail as possible to help reproduce and fix the bug.
+  - type: dropdown
+    id: subsystem
+    attributes:
+      label: Affected Subsystem
+      description: Which part of AI OS produced the error?
+      options:
+        - ISO Build & Bootloader (build_base_os.sh / isolinux)
+        - Master Orchestrator (main_orchestrator.py)
+        - AI Shell Agent & TTY UI (ai_shell_agent / ai_terminal_ui)
+        - Hardware Detection & Inference Tiers (hardware_manager)
+        - Project Architect & Scaffolding (project_architect)
+        - Self-Healer & Patch Engine (self_healer)
+        - Isolated Sandbox Runner (sandbox_runner)
+        - System Indexer & AST Search (system_indexer)
+        - Model Router & Network Fallback (model_router)
+        - Personal Memory Engine (personal_memory)
+        - Background Cron Daemon (ai_cron_daemon)
+        - Sway / Wayland GUI Expander (gui_expander / toggle_gui)
+        - Other / Kernel / OpenRC
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Execution Environment
+      description: OS version, host virtualization (VMware, QEMU, VirtualBox, Bare-metal), GPU specs, RAM.
+      placeholder: |
+        - Host OS: Windows 10 / Ubuntu 22.04
+        - Virtualizer: VMware Workstation 17.5 / QEMU 8.0
+        - RAM: 8GB
+        - CPU/GPU: Intel i7 / NVIDIA RTX 3060
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact commands executed or steps taken.
+      placeholder: |
+        1. Booted ai-os-3.21-x86_64.iso in QEMU
+        2. In TTY1, executed `ai-os`
+        3. Typed 'build me a web server'
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior & Error Logs
+      description: Copy and paste traceback or error logs.
+      render: shell
+    validations:
+      required: true

@@ -1,0 +1,52 @@
+name: Release Builder & Binary Distribution
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build Live ISO & Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Host ISO Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            xorriso \
+            syslinux \
+            isolinux \
+            syslinux-utils \
+            syslinux-common \
+            squashfs-tools \
+            mtools \
+            curl \
+            tar \
+            dosfstools
+
+      - name: Execute ISO Build Script
+        run: |
+          chmod +x build_base_os.sh
+          sudo ./build_base_os.sh
+
+      - name: Compute SHA256 Checksums
+        run: |
+          sha256sum ai-os-*.iso > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ai-os-*.iso
+            SHA256SUMS.txt
+          draft: false
+          prerelease: false
+          generate_release_notes: true

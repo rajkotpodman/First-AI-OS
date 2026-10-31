@@ -1,0 +1,3 @@
+#!/bin/sh
+# ai-plugin - CLI Helper Script for AI OS Extension & Plugin Manager
+exec python3 "$(dirname "$0")/src/ai_plugin.py" "$@"

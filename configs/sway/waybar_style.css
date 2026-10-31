@@ -1,0 +1,70 @@
+/* Waybar Style for AI OS Minimal Desktop */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "DejaVu Sans Mono", monospace;
+    font-size: 12px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(15, 23, 42, 0.92);
+    border-bottom: 2px solid #38bdf8;
+    color: #f8fafc;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+#workspaces button {
+    padding: 0 10px;
+    background-color: transparent;
+    color: #94a3b8;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button:hover {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+}
+
+#workspaces button.focused {
+    background-color: rgba(56, 189, 248, 0.25);
+    color: #38bdf8;
+    border-bottom: 2px solid #38bdf8;
+}
+
+#mode {
+    background-color: #f59e0b;
+    color: #0f172a;
+    padding: 0 8px;
+    font-weight: bold;
+}
+
+#clock,
+#cpu,
+#memory,
+#disk,
+#tray {
+    padding: 0 12px;
+    margin: 3px 2px;
+    background-color: #1e293b;
+    border-radius: 4px;
+    color: #f1f5f9;
+}
+
+#cpu {
+    color: #38bdf8;
+}
+
+#memory {
+    color: #a855f7;
+}
+
+#disk {
+    color: #10b981;
+}
+
+#clock {
+    color: #e2e8f0;
+    font-weight: bold;
+}

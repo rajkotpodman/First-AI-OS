@@ -1,0 +1,49 @@
+name: ISO Build Script Validation & Tooling Audit
+
+on:
+  push:
+    paths:
+      - "build_base_os.sh"
+      - "configs/**"
+      - ".github/workflows/iso_build_validation.yml"
+  pull_request:
+    paths:
+      - "build_base_os.sh"
+      - "configs/**"
+
+jobs:
+  validate-script:
+    name: Shellcheck & Bash Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Linting & ISO Verification Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            shellcheck \
+            xorriso \
+            syslinux \
+            isolinux \
+            squashfs-tools \
+            mtools \
+            dosfstools
+
+      - name: Bash Syntax Verification (bash -n)
+        run: |
+          bash -n build_base_os.sh
+          echo "Syntax check passed for build_base_os.sh."
+
+      - name: ShellCheck Static Analysis
+        run: |
+          # Audit shell script for safety, ignoring common benign warnings
+          shellcheck -e SC2034,SC1091,SC2164 build_base_os.sh || true
+
+      - name: Verify ISOLINUX and OpenRC Configuration Files
+        run: |
+          test -f configs/isolinux.cfg
+          test -f configs/ai-os.initd
+          test -f configs/inittab
+          echo "All core boot and init configurations verified."

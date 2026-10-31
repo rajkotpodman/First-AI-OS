@@ -1,0 +1,7 @@
+#!/bin/sh
+# ai-vision - CLI Helper Script for AI OS Image & Screenshot Analysis
+if [ "$#" -eq 0 ]; then
+    exec python3 "$(dirname "$0")/src/multimodal_gateway.py" --screenshot
+else
+    exec python3 "$(dirname "$0")/src/multimodal_gateway.py" --vision "$@"
+fi

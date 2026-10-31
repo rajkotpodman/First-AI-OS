@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  ai-os-dev:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM alpine:3.21
+        RUN apk update && apk add --no-cache \
+            bash \
+            python3 \
+            py3-pip \
+            git \
+            curl \
+            sudo \
+            util-linux \
+            openrc \
+            busybox-extras \
+            e2fsprogs \
+            sqlite
+        WORKDIR /opt/ai-os
+        COPY . /opt/ai-os
+        RUN chmod +x /opt/ai-os/src/main_orchestrator.py && \
+            ln -sf /opt/ai-os/src/main_orchestrator.py /usr/bin/ai-os
+        ENV PYTHONPATH=/opt/ai-os/src
+        CMD ["/usr/bin/python3", "/opt/ai-os/src/main_orchestrator.py"]
+    container_name: first-ai-os-container
+    privileged: true
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/opt/ai-os
+      - aios-workspace:/workspace
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - AI_OS_ENV=development
+    networks:
+      - aios-net
+
+  ollama-service:
+    image: ollama/ollama:latest
+    container_name: aios-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    networks:
+      - aios-net
+
+volumes:
+  aios-workspace:
+  ollama-models:
+
+networks:
+  aios-net:
+    driver: bridge

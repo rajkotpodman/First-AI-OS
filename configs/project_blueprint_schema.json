@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProjectBlueprint",
+  "description": "Structured schema for autonomous end-to-end software project generation in AI OS",
+  "type": "object",
+  "required": ["project_name", "runtime", "files"],
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_\\-\\.]+$",
+      "description": "Unique filesystem-friendly directory name for the project"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief architectural overview and functional goals of the project"
+    },
+    "runtime": {
+      "type": "string",
+      "enum": ["python", "node", "rust", "go", "generic"],
+      "description": "Primary execution runtime and container environment"
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "pip": { "type": "array", "items": { "type": "string" } },
+        "npm": { "type": "array", "items": { "type": "string" } },
+        "cargo": { "type": "array", "items": { "type": "string" } },
+        "go": { "type": "array", "items": { "type": "string" } },
+        "system": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "files": {
+      "type": "array",
+      "description": "Source code, configuration files, and documentation",
+      "items": {
+        "type": "object",
+        "required": ["path", "content"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Relative file path from project root (e.g. app/main.py, Dockerfile)"
+          },
+          "content": {
+            "type": "string",
+            "description": "Complete source code content for the file"
+          },
+          "description": {
+            "type": "string",
+            "description": "Brief explanation of the file's role"
+          },
+          "executable": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to apply executable permissions (+x)"
+          }
+        }
+      }
+    },
+    "setup_commands": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Commands to execute for bootstrapping (e.g. npm install)"
+    },
+    "entrypoint": {
+      "type": "string",
+      "description": "Shell command to run the main project service"
+    },
+    "test_command": {
+      "type": "string",
+      "description": "Command to run the project's automated test suite"
+    }
+  }
+}

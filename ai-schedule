@@ -1,0 +1,3 @@
+#!/bin/sh
+# ai-schedule - CLI Helper Script for AI OS Autonomous Task Scheduler
+exec python3 "$(dirname "$0")/src/ai_schedule.py" "$@"

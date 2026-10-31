@@ -1,0 +1,23 @@
+[Unit]
+Description=AI OS Autonomous Task Scheduler & Background Cron Daemon
+After=network.target local-fs.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/usr/local/ai_os
+ExecStart=/usr/bin/python3 /usr/local/ai_os/src/ai_cron_daemon.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/ai_cron.log
+StandardError=append:/var/log/ai_cron.err
+PIDFile=/var/run/ai_cron.pid
+
+# Security Sandboxing options
+ProtectSystem=full
+ProtectHome=read-only
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

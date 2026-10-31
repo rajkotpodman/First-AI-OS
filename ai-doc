@@ -1,0 +1,3 @@
+#!/bin/sh
+# ai-doc - CLI Helper Script for AI OS Offline Documentation Engine
+exec python3 "$(dirname "$0")/src/ai_doc.py" "$@"

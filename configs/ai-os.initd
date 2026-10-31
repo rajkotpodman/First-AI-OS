@@ -1,0 +1,38 @@
+#!/sbin/openrc-run
+# /etc/init.d/ai-os: OpenRC service for AI OS Background Daemons and System Services
+
+name="AI OS Background Services"
+description="Starts AI Operating System background daemons, cron scheduler, and security runtime"
+
+command="/usr/bin/python3"
+command_args="/opt/ai-os/src/ai_cron_daemon.py"
+command_background="yes"
+pidfile="/run/ai-os.pid"
+output_log="/var/log/ai-os.log"
+error_log="/var/log/ai-os.err"
+
+depend() {
+    need localmount
+    after bootmisc networking docker
+}
+
+start_pre() {
+    mkdir -p /var/log /run /workspace /etc/ai_os /opt/ai-os/logs
+    checkpath -d -m 0755 -o root:root /run
+
+    # Deploy configs if missing from /etc/ai_os
+    if [ -d /opt/ai-os/configs ] && [ ! -f /etc/ai_os/config.yaml ]; then
+        cp -rn /opt/ai-os/configs/* /etc/ai_os/ 2>/dev/null || true
+    fi
+}
+
+start_post() {
+    einfo "AI OS background daemons initialized successfully."
+}
+
+stop() {
+    ebegin "Stopping AI OS Background Services"
+    start-stop-daemon --stop --pidfile "${pidfile}" --quiet
+    eend $?
+}
+

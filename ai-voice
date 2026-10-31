@@ -1,0 +1,3 @@
+#!/bin/sh
+# ai-voice - CLI Helper Script for AI OS Voice Commands
+exec python3 "$(dirname "$0")/src/multimodal_gateway.py" --voice "$@"

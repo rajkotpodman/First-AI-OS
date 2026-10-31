@@ -1,0 +1,4 @@
+#!/bin/sh
+# Launch AI OS Web Testing Dashboard
+echo "[*] Starting AI OS Web Testing Dashboard on http://localhost:8888..."
+exec python3 "$(dirname "$0")/src/web_dashboard.py" "$@"

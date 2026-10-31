@@ -1,0 +1,51 @@
+#!/sbin/openrc-run
+# /etc/init.d/ai-agent: OpenRC daemon service for AI Engine & Background Agent
+
+name="AI Agent Engine Daemon"
+description="Starts Ollama local LLM runtime and AI OS background agent"
+
+command="/usr/local/bin/ollama"
+command_args="serve"
+command_background="yes"
+pidfile="/run/ai-agent.pid"
+output_log="/var/log/ai-agent.log"
+error_log="/var/log/ai-agent.err"
+
+# Ensure Ollama data directory sits on persistent storage
+export OLLAMA_MODELS="/workspace/.ollama/models"
+export OLLAMA_HOST="0.0.0.0:11434"
+
+depend() {
+    need net localmount
+    after ai-overlayfs docker
+}
+
+start_pre() {
+    # Ensure persistence directory exists
+    mkdir -p "${OLLAMA_MODELS}"
+    mkdir -p /var/log
+    checkpath -d -m 0755 -o root:root /run
+
+    # Load hardware-optimized environment variables if present
+    if [ -f /etc/ai_os/ollama.env ]; then
+        set -a
+        . /etc/ai_os/ollama.env
+        set +a
+    fi
+
+    # Wait briefly for networking loopback
+    if ! [ -x /usr/local/bin/ollama ]; then
+        eerror "Ollama binary not found at /usr/local/bin/ollama"
+        return 1
+    fi
+}
+
+start_post() {
+    einfo "AI Engine service started. Listening on ${OLLAMA_HOST}"
+}
+
+stop() {
+    ebegin "Stopping AI Agent Engine"
+    start-stop-daemon --stop --pidfile "${pidfile}"
+    eend $?
+}

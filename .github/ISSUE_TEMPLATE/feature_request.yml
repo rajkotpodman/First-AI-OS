@@ -1,0 +1,37 @@
+name: Feature Request
+description: Propose a new feature, capability, or architectural enhancement for First AI OS
+title: "[FEAT]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping shape the future of First AI OS! Please detail your feature suggestion below.
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Summary
+      description: A clear and concise description of the proposed feature.
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Problem or Motivation
+      description: Why is this feature needed? What problem does it solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Implementation / Architecture
+      description: How should this be implemented? Which subsystems are touched?
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions Considered
+      description: Any alternative approaches or workarounds considered?
+    validations:
+      required: false
