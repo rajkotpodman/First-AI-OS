@@ -179,3 +179,4 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
    ```
 4. Push your branch to GitHub and open a Pull Request against the `main` branch.
 5. Fill out the PR template checklist completely.
+

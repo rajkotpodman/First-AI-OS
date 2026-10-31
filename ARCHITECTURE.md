@@ -176,3 +176,4 @@ When the user requests graphical output (`gui` or `toggle_gui.sh`), First AI OS 
 3. Starts the `seatd` daemon to handle hardware display and input seat multiplexing without root privileges.
 4. Executes `sway` on `/dev/tty1`, replacing the TTY agent with the Wayland compositor.
 5. Upon user exit (`Super+Shift+E`), Sway cleanly shuts down, the seat is released, and `inittab` respawns the master TTY AI agent on `tty1`.
+

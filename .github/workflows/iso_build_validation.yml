@@ -47,3 +47,4 @@ jobs:
           test -f configs/ai-os.initd
           test -f configs/inittab
           echo "All core boot and init configurations verified."
+

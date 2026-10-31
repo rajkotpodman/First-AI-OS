@@ -79,3 +79,4 @@ If you discover a security vulnerability or bypass in First AI OS (such as a com
 - **Fix & Public Advisory:** Within 30 days (coordinated disclosure).
 
 Thank you for helping keep First AI OS and its users secure!
+

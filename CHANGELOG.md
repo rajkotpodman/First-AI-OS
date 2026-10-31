@@ -45,3 +45,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GitHub Actions CI:** Automated multi-version Python matrix testing (3.10, 3.11, 3.12) with flake8 linting and configuration schema validation.
 - **ISO Build Validation Workflow:** Automated syntax and tooling checks for `build_base_os.sh`.
 - **Release Automation:** Tagged release builder with automatic SHA-256 checksum generation and GitHub asset attachment.
+

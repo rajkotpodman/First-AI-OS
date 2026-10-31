@@ -426,3 +426,4 @@ A: From the `ai-os` prompt, type `exit` or run standard OpenRC power commands:
 poweroff    # Gracefully unmounts OverlayFS and halts system
 reboot      # Restarts the machine
 ```
+

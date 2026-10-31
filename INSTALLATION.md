@@ -247,3 +247,4 @@ ai-index --status
 ai-router --status
 ```
 If all four checks output green `[OK]` status indicators, your First AI OS installation is fully operational and ready for autonomous agent workloads!
+

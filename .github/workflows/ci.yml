@@ -90,3 +90,4 @@ jobs:
         run: |
           pip install bandit
           bandit -r src/ -ll -ii || true
+

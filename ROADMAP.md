@@ -47,3 +47,4 @@ This roadmap outlines the planned technical milestones for **First AI OS** acros
   - Native Wayland floating widget for real-time model token streaming and interactive AST graph visualization.
 - [ ] **Zero-Knowledge Encrypted Personal Memory:**
   - Hardware TPM 2.0 / USB security token cryptographic sealing of `/workspace/.ai_os/memory.json`.
+
